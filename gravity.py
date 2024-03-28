@@ -75,27 +75,39 @@ class Planet:
                     planets.append(new_planet)
 
 
+#Stores all the planets in the simulation and contains methods for resetting
+#the simulation, adjusting it, and moving the simulation forwards
+class PlanetCluster:
+    def __init__(self):
+        self.cluster = [];
+        self.total_mass = 0;
 
-#Uses recursion to update each planet's attributes, move it, and check for 
-#collisions, then go to the next frame
-def move_planets():
-    for planet in planets:
-        planet.ApplyForces(planets)
-        planet.UpdatePlanet()
-        planet.CheckCollisions(planets)
-        planet_canvas.move(planet.ball, planet.velocity[0], planet.velocity[1])
+    #Populate array (and screen) with a bunch of planet objects
+    def create_planets(self):
+        self.cluster.clear()
+        planet_canvas.delete("all")
+        self.total_mass = 0
 
-    planet_canvas.after(DELAY, move_planets)
+        for i in range(0, randint(30, 50)):
+            mass = randint(50, 200)
+            self.cluster.append(Planet(np.array([randint(0, 1000), randint(0, 1000)]),
+                np.array([randint(-1, 1), randint(-1, 1)]), mass))
+        self.total_mass += mass
 
 
-#Populate array (and screen) with a bunch of planet objects
-def create_planets():
-    planets.clear()
-    planet_canvas.delete("all")
+    #Uses recursion to update each planet's attributes, move it, and check for 
+    #collisions, then go to the next frame
+    def move_planets(self):
+        for planet in self.cluster:
+            planet.ApplyForces(self.cluster)
+            planet.UpdatePlanet()
+            planet.CheckCollisions(self.cluster)
+            planet_canvas.move(planet.ball, planet.velocity[0], planet.velocity[1])
 
-    for i in range(0, randint(30, 50)):
-        planets.append(Planet(np.array([randint(0, 1000), randint(0, 1000)]),
-        np.array([randint(-1, 1), randint(-1, 1)]), randint(50, 200)))
+        self.adjust_velocities()
+
+        planet_canvas.after(DELAY, self.move_planets)
+
 
 #Create window and canvas
 root = Tk()
@@ -103,14 +115,14 @@ planet_canvas = Canvas(root, bg="white", height=1000, width=1000)
 planet_canvas.pack()
 
 #populates window with lots of small planets
-planets = []
-create_planets()
+planet_cluster = PlanetCluster()
+planet_cluster.create_planets()
 
 #Resets simulation if mouse pressed
 def reset_simulation(self):
-    create_planets()
+    planet_cluster.create_planets()
 
 root.bind("<ButtonRelease>", reset_simulation)
 
-planet_canvas.after(DELAY, move_planets)
+planet_canvas.after(DELAY, planet_cluster.move_planets)
 root.mainloop()
