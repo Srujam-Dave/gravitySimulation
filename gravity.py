@@ -104,8 +104,6 @@ class PlanetCluster:
             planet.CheckCollisions(self.cluster)
             planet_canvas.move(planet.ball, planet.velocity[0], planet.velocity[1])
 
-        self.adjust_velocities()
-
         planet_canvas.after(DELAY, self.move_planets)
 
 
