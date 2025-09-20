@@ -8,4 +8,4 @@ This project uses python to create a simple simulation of Newtonian gravity betw
 
 In order to run the simulation, both numpy and tkinter must be installed. 
 
-The simulation runs automatically, and can be restarted by clicking the screen
+The simulation runs automatically, and can be restarted by pressing the space bar. To toggle the quadtree visualization, click the screen.
